@@ -1,7 +1,7 @@
 class Auth {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
-    this._headers = headers;
+    // this._headers = headers;
   }
 
   _checkResponse(res) {return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);}
@@ -39,7 +39,7 @@ class Auth {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        authorization: `Bearer ${token}`,
       }
     })
     .then(this._checkResponse);
@@ -47,10 +47,10 @@ class Auth {
 }
 
 const auth = new Auth({
-  baseUrl: "https://auth.nomoreparties.co",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseUrl: "http://127.0.0.1:3001",
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
 });
 
 export default auth;

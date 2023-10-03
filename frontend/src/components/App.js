@@ -67,13 +67,13 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     if(!isLiked) {
-      api.addLike(card._id, !isLiked).then((newCard) => {
+      api.addLike(card._id, localStorage.jwt, !isLiked).then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     })
       .catch((err) => console.log(err))
     }
     else {
-      api.deleteLike(card._id, !isLiked).then((newCard) => {
+      api.deleteLike(card._id, localStorage.jwt, !isLiked).then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     })
       .catch((err) => console.log(err))
@@ -81,7 +81,7 @@ function App() {
   };
 
   const handleCardDelete = (card) => {
-    api.deleteCard(card._id)
+    api.deleteCard(card._id, localStorage.jwt)
     .then(() => {
       setCards((state) => state.filter((c) => c._id !== card._id));
     })
@@ -89,7 +89,7 @@ function App() {
   };
 
   function handleUpdateUser(dataUser) {
-    api.setUserInfo(dataUser)
+    api.setUserInfo(dataUser, localStorage.jwt)
     .then(res => {
       setCurrentUser(res)
       closeAllPopups();
@@ -98,7 +98,7 @@ function App() {
   }
 
   function handleUpdateAvatar(dataUser) {
-    api.setPhoto(dataUser)
+    api.setPhoto(dataUser, localStorage.jwt)
       .then(res => {
         setCurrentUser(res)
         closeAllPopups();
@@ -107,7 +107,7 @@ function App() {
   }
 
   function handleAddCard(dataCard) {
-    api.addNewCard(dataCard)
+    api.addNewCard(dataCard, localStorage.jwt)
       .then(newCard => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -117,7 +117,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      Promise.all([api.getUserInfo(), api.getInitialCards()])
+      Promise.all([api.getUserInfo(localStorage.jwt), api.getInitialCards(localStorage.jwt)])
         .then(([dataUser, dataCard]) => {
           setCards(dataCard);
           setCurrentUser(dataUser);
@@ -127,10 +127,12 @@ function App() {
 
   useEffect(() => {
     checkToken();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function checkToken() {
     const jwt = localStorage.getItem('jwt');
+    // const jwt = localStorage.jwt;
     if (jwt) {
       auth.checkToken(jwt)
         .then((res) => {
@@ -138,8 +140,11 @@ function App() {
           setUserEmail(res.data.email);
           navigate("/", {replace: true})
         })
-        .catch(err => console.log(err));
-    }
+        .catch((err) => {
+          setIsLoggedIn(false);
+          console.log(err);
+        });
+    };
   }
 
   function signOut() {
@@ -163,7 +168,8 @@ function App() {
 
   function handleLogin(email, password) {
     auth.authorize(email, password)
-      .then(() => {
+      .then((res) => {
+        localStorage.setItem('jwt', res.token)
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate('/', {replace: true});

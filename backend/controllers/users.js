@@ -8,7 +8,7 @@ const ConflictError = require('../errors/ConflictError');
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
@@ -16,11 +16,11 @@ module.exports.login = (req, res, next) => {
         { expiresIn: '7d' },
       );
 
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: true,
-      });
+      // res.cookie('jwt', token, {
+      //   httpOnly: true,
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      //   // sameSite: true,
+      // });
 
       res.send({ token });
     })
