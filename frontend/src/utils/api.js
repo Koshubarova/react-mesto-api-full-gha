@@ -107,7 +107,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'http://api.koshubarova.nomoredomainsrocks.ru'
+  baseUrl: 'https://api.koshubarova.nomoredomainsrocks.ru'
 });
 
 export default api
