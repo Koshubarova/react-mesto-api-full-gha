@@ -132,7 +132,6 @@ function App() {
 
   function checkToken() {
     const jwt = localStorage.getItem('jwt');
-    // const jwt = localStorage.jwt;
     if (jwt) {
       auth.checkToken(jwt)
         .then((res) => {

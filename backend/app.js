@@ -13,7 +13,6 @@ const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
-// const { PORT = 3001, DB_URL = 'mongodb://127.0.0.1/mestodb' } = process.env;
 
 const { addUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -72,18 +71,6 @@ app.use(errorLogger);
 app.use(errors());
 
 app.use(errorHandler);
-
-// app.use((err, req, res, next) => {
-//   const { statusCode = 500, message } = err;
-//   res
-//     .status(statusCode)
-//     .send({
-//       message: statusCode === 500
-//         ? 'На сервере произошла ошибка'
-//         : message,
-//     });
-//   next(err);
-// });
 
 app.listen(PORT, () => {
   console.log('Listening 3000');
