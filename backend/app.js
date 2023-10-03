@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { errors, celebrate, Joi } = require('celebrate');
 const path = require('path');
 const express = require('express');
@@ -7,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -37,6 +39,8 @@ mongoose.connect(DB_URL, {
   useUnifiedTopology: true,
 });
 
+app.use(requestLogger);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -62,6 +66,8 @@ app.use('/*', (req, res, next) => {
   const error = new NotFoundError('Страница не найдена');
   next(error);
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
