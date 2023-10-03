@@ -171,9 +171,13 @@ function App() {
         localStorage.setItem('jwt', res.token)
         setIsLoggedIn(true);
         setUserEmail(email);
+        openInfoTooltip();
         navigate('/', {replace: true});
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        openInfoTooltip();
+      })
   }
 
   return (
