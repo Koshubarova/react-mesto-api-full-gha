@@ -12,7 +12,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/NotFoundError');
 
-const { PORT = 3001, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 // const { PORT = 3001, DB_URL = 'mongodb://127.0.0.1/mestodb' } = process.env;
 
 const { addUser, login } = require('./controllers/users');
@@ -21,7 +21,7 @@ const auth = require('./middlewares/auth');
 const app = express();
 
 app.use(cors());
-// app.use(cors({ origin: 'http://127.0.0.1:3001' }));
+// app.use(cors({ origin: 'http://127.0.0.1:3000' }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -86,5 +86,5 @@ app.use(errorHandler);
 // });
 
 app.listen(PORT, () => {
-  console.log('Listening 3001');
+  console.log('Listening 3000');
 });

@@ -47,10 +47,7 @@ class Auth {
 }
 
 const auth = new Auth({
-  baseUrl: "http://127.0.0.1:3001",
-  // headers: {
-  //   "Content-Type": "application/json",
-  // },
+  baseUrl: "http://127.0.0.1:3000",
 });
 
 export default auth;
