@@ -35,6 +35,7 @@ mongoose.connect(DB_URL, {
 });
 
 app.use(requestLogger);
+
 app.use(limiter);
 
 app.get('/crash-test', () => {
