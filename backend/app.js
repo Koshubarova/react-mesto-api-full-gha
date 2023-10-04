@@ -28,7 +28,6 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
-app.use(limiter);
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
@@ -36,6 +35,7 @@ mongoose.connect(DB_URL, {
 });
 
 app.use(requestLogger);
+app.use(limiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
