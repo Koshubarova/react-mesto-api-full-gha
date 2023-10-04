@@ -1,6 +1,5 @@
 require('dotenv').config();
 const { errors, celebrate, Joi } = require('celebrate');
-const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -20,18 +19,15 @@ const auth = require('./middlewares/auth');
 const app = express();
 
 app.use(cors());
-// app.use(cors({ origin: 'http://127.0.0.1:3000' }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
-app.use(limiter);
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
@@ -39,6 +35,14 @@ mongoose.connect(DB_URL, {
 });
 
 app.use(requestLogger);
+
+app.use(limiter);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
